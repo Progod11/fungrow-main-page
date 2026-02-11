@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Funngro • Teen Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --accent: #f97316;
+      --bg: #020617;
+      --surface: #020617;
+      --card: #020617;
+      --card-soft: #020617;
+      --border-subtle: rgba(51,65,85,0.9);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --success: #22c55e;
+      --danger: #f97373;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b, #020617);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 230px;
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      border-right: 1px solid var(--border-subtle);
+      padding: 1.2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .sb-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, #4f46e5, #22c55e, #f97316, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+    .sb-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .sb-tag {
+      font-size: 0.7rem;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      color: var(--muted);
+    }
+    .sb-nav {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      font-size: 0.85rem;
+    }
+    .sb-link {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 0.45rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .sb-link span.icon {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+    }
+    .sb-link.active {
+      background: linear-gradient(to right, rgba(79,70,229,0.2), rgba(248,113,113,0.08));
+      color: var(--text);
+    }
+    .sb-footer {
+      margin-top: auto;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(31,41,55,0.9);
+      padding-top: 0.7rem;
+    }
+
+    /* Main layout */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 60%);
+    }
+    .main-header {
+      padding: 1rem 1.5rem 0.8rem;
+      border-bottom: 1px solid rgba(31,41,55,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .mh-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .mh-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .mh-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .mh-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn {
+      border-radius: 999px;
+      padding: 0.4rem 0.95rem;
+      font-size: 0.8rem;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .btn-primary {
+      border-color: transparent;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      box-shadow: 0 10px 25px rgba(79,70,229,0.45);
+    }
+    .mh-avatar {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding-left: 0.75rem;
+      border-left: 1px solid rgba(31,41,55,0.9);
+    }
+    .mh-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, #f97316, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .mh-name {
+      font-size: 0.8rem;
+    }
+    .mh-name span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    /* Content area */
+    .main-body {
+      padding: 1rem 1.5rem 1.4rem;
+      display: grid;
+      grid-template-columns: 2fr 1.25fr;
+      gap: 1.2rem;
+    }
+
+    .card {
+      background: rgba(15,23,42,0.96);
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      padding: 0.9rem 1rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.85);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.8rem;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .card-sub {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+    .chip {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      color: var(--muted);
+    }
+
+    /* Wallet summary */
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 0.9rem;
+      align-items: center;
+    }
+    .wallet-main {
+      padding-right: 0.6rem;
+      border-right: 1px dashed rgba(55,65,81,0.9);
+    }
+    .wallet-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .wallet-amount {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0.15rem 0;
+    }
+    .wallet-row {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    .wallet-row div span {
+      display: block;
+    }
+    .wallet-row strong {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .pill-progress {
+      margin-top: 0.45rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .progress-bar {
+      margin-top: 0.25rem;
+      height: 7px;
+      border-radius: 999px;
+      background: #020617;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-bar span {
+      position: absolute;
+      inset: 0;
+      width: 62%;
+      background: linear-gradient(to right, #22c55e, #facc15);
+      border-radius: inherit;
+    }
+
+    .wallet-cta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .wallet-pill {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--muted);
+    }
+    .wallet-pill span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.22);
+    }
+
+    /* Projects table */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+    }
+    .table th,
+    .table td {
+      padding: 0.35rem 0.1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(31,41,55,0.9);
+    }
+    .table th {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-right: 0.35rem;
+    }
+    .status-live {
+      background: var(--success);
+    }
+    .status-review {
+      background: #facc15;
+    }
+    .status-pending {
+      background: #60a5fa;
+    }
+    .status-rejected {
+      background: var(--danger);
+    }
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+    }
+
+    /* Right column cards */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+      font-size: 0.78rem;
+    }
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0.35rem;
+      border-radius: 0.55rem;
+      background: rgba(15,23,42,0.92);
+      border: 1px solid rgba(31,41,55,0.9);
+    }
+    .list-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+    .list-title {
+      font-size: 0.8rem;
+    }
+    .list-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .list-pay {
+      font-size: 0.78rem;
+      text-align: right;
+    }
+    .pill-small {
+      font-size: 0.7rem;
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      background: rgba(30,64,175,0.55);
+      border: 1px solid rgba(129,140,248,0.8);
+    }
+
+    .tips-list {
+      list-style: none;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .tips-list li::before {
+      content: "• ";
+      color: #64748b;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .sidebar {
+        display: none;
+      }
+      .main-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .mh-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .main-body {
+        padding: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-badge">Fg</div>
+      <div>
+        <div class="sb-label">Funngro</div>
+        <div class="sb-tag">Teen account</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-link active">
+        <span class="icon">🏠</span>
+        <span>Dashboard</span>
+      </div>
+      <div class="sb-link">
+        <span class="icon">📋</span>
+        <span>My projects</span>
+      </div>
+      <div class="sb-link">
+        <span class="icon">🪙</span>
+        <span>Wallet & payouts</span>
+      </div>
+      <div class="sb-link">
+        <span class="icon">📁</span>
+        <span>Portfolio</span>
+      </div>
+      <div class="sb-link">
+        <span class="icon">⚙️</span>
+        <span>Settings</span>
+      </div>
+    </nav>
+
+    <div class="sb-footer">
+      <div>Need help?</div>
+      <div>support@funngro-demo.com</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- HEADER -->
+    <header class="main-header">
+      <div class="mh-left">
+        <div class="mh-title">Hi, Arjun 👋</div>
+        <div class="mh-sub">Here’s a quick view of your earnings and active projects today.</div>
+      </div>
+      <div class="mh-right">
+        <button class="btn">View portfolio</button>
+        <button class="btn btn-primary">Withdraw</button>
+        <div class="mh-avatar">
+          <div class="mh-dot">A</div>
+          <div class="mh-name">
+            Arjun Sharma
+            <span>Teenlancer • 10th Std</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- BODY -->
+    <main class="main-body">
+      <!-- Left side -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Wallet overview</div>
+            <div class="card-sub">Track your approved earnings and upcoming payouts.</div>
+          </div>
+          <span class="chip">Cycle: 1–15 Feb</span>
+        </div>
+
+        <div class="wallet-grid">
+          <div class="wallet-main">
+            <div class="wallet-label">Current balance</div>
+            <div class="wallet-amount">₹2,430.50</div>
+            <div class="wallet-row">
+              <div>
+                <span>Approved this month</span>
+                <strong>₹3,200</strong>
+              </div>
+              <div>
+                <span>In review</span>
+                <strong>₹780</strong>
+              </div>
+            </div>
+            <div class="pill-progress">
+              Goal: ₹4,000 this month
+              <div class="progress-bar">
+                <span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wallet-cta">
+            <div class="wallet-pill">
+              <span class="dot"></span>
+              Next payout in 3 days
+            </div>
+            <div>Minimum withdrawal: ₹250</div>
+            <div>Method: UPI • arjun@ybl</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right side -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">New projects for you</div>
+            <div class="card-sub">Matched with your skills: Canva, basic video editing.</div>
+          </div>
+          <span class="chip">Filter: All</span>
+        </div>
+
+        <div class="list">
+          <div class="list-item">
+            <div class="list-meta">
+              <div class="list-title">Instagram reels for ed‑tech brand</div>
+              <div class="list-sub">Create 3 reels using mobile edits • 2‑day deadline</div>
+            </div>
+            <div class="list-pay">
+              <div class="pill-small">₹900</div>
+              <div style="font-size:0.7rem; margin-top:0.2rem; color:var(--muted);">Apply • 7 spots left</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="list-meta">
+              <div class="list-title">Poster for coaching class</div>
+              <div class="list-sub">Coaching launch poster in Canva • 24 hours</div>
+            </div>
+            <div class="list-pay">
+              <div class="pill-small">₹450</div>
+              <div style="font-size:0.7rem; margin-top:0.2rem; color:var(--muted);">Instant approval</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="list-meta">
+              <div class="list-title">Feedback survey for learning app</div>
+              <div class="list-sub">15‑minute survey on Android + screenshots</div>
+            </div>
+            <div class="list-pay">
+              <div class="pill-small">₹150</div>
+              <div style="font-size:0.7rem; margin-top:0.2rem; color:var(--muted);">Closes tonight</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Left bottom: projects table -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">My project status</div>
+            <div class="card-sub">Keep an eye on what’s live, in review, or completed.</div>
+          </div>
+          <span class="chip">Last 30 days</span>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Project</th>
+              <th>Brand</th>
+              <th>Payout</th>
+              <th>Deadline</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="status-dot status-live"></span>
+                Live
+              </td>
+              <td>Exam motivation reels</td>
+              <td>StudySpark</td>
+              <td>₹1,100</td>
+              <td>12 Feb</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="status-dot status-review"></span>
+                In review
+              </td>
+              <td>Coaching poster set</td>
+              <td>FuturePath Academy</td>
+              <td>₹600</td>
+              <td>10 Feb</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="status-dot status-pending"></span>
+                Pending
+              </td>
+              <td>Survey: learning app</td>
+              <td>LearnLoop</td>
+              <td>₹150</td>
+              <td>Today</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="status-dot status-rejected"></span>
+                Rejected
+              </td>
+              <td>Logo concept (draft)</td>
+              <td>ByteBites</td>
+              <td>₹0</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Right bottom: tips -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Tips to get approved</div>
+            <div class="card-sub">Short best practices before you submit any project.</div>
+          </div>
+          <span class="chip">Teen guide</span>
+        </div>
+        <ul class="tips-list">
+          <li>Read the brief completely once, then again while creating your work.</li>
+          <li>Use only copyright‑free images, music, and templates.</li>
+          <li>Submit 1–2 best options instead of 6–7 random drafts.</li>
+          <li>Write a short note to explain your idea when you upload.</li>
+          <li>Respect deadlines; if stuck, message the brand early.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
