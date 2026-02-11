@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Funngro Teenlancer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --accent: #f97316;
+      --bg: #0f172a;
+      --card-bg: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --success: #22c55e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b, #020617);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* Navbar */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .logo-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, #4f46e5, #22c55e, #f97316, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #020617;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .nav-links a {
+      color: var(--muted);
+      transition: color 0.15s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn {
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+    }
+    .btn-outline {
+      border-color: rgba(148,163,184,0.6);
+    }
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      border: none;
+      color: white;
+      box-shadow: 0 10px 25px rgba(79,70,229,0.4);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.2rem 3rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .hero-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 3.1vw, 3rem);
+      line-height: 1.1;
+      margin-bottom: 0.7rem;
+    }
+    .hero-title span {
+      background: linear-gradient(to right, #a855f7, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 30rem;
+      margin-bottom: 1.1rem;
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .hero-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.3rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .metric strong {
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    /* Hero card */
+    .hero-card {
+      background: radial-gradient(circle at top left, rgba(94,234,212,0.12), transparent 55%),
+                  linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+      border-radius: 1.3rem;
+      border: 1px solid rgba(148,163,184,0.35);
+      box-shadow: 0 24px 60px rgba(15,23,42,0.85);
+      padding: 1.5rem 1.7rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.45);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.28);
+    }
+    .balance-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .balance-amount {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin: 0.2rem 0 1.1rem;
+    }
+    .progress-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: #020617;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .progress-bar span {
+      position: absolute;
+      inset: 0;
+      width: 58%;
+      background: linear-gradient(to right, #22c55e, #facc15);
+      border-radius: inherit;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+    }
+    .task-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      padding: 0.5rem 0;
+      border-top: 1px dashed rgba(148,163,184,0.4);
+    }
+    .task-row strong {
+      font-size: 0.9rem;
+    }
+    .badge {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+    }
+    .floating-tag {
+      position: absolute;
+      right: 1.4rem;
+      top: 1.4rem;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(248,250,252,0.22);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+    }
+    .blur-circle {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,189,248,0.4), transparent 60%);
+      right: -40px;
+      bottom: -40px;
+      filter: blur(2px);
+      opacity: 0.6;
+    }
+
+    /* Features section */
+    .features {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.2rem 2.5rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+    .feature-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(79,70,229,0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.6rem;
+      font-size: 1rem;
+    }
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .feature-text {
+      color: var(--muted);
+    }
+    .section-heading {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: auto;
+      padding: 1.2rem 1.2rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(30,64,175,0.7);
+      background: linear-gradient(to top, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 880px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-card {
+        order: -1;
+      }
+      .nav-inner {
+        gap: 0.75rem;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-badge">Fg</div>
+        <span>Funngro</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#features">For teens</a>
+        <a href="#features">For brands</a>
+      </nav>
+      <div class="nav-cta">
+        <a href="dashboard.html"><button class="btn btn-outline">Log in</button></a>
+        <a href="dashboard.html"><button class="btn btn-primary">Start earning</button></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero">
+      <div>
+        <p class="hero-kicker">Earn • Learn • Grow</p>
+        <h1 class="hero-title">
+          Your first income, while you are still a <span>student</span>.
+        </h1>
+        <p class="hero-sub">
+          Discover real‑world projects from startups and brands, build your portfolio,
+          and get paid directly in your bank or UPI.
+        </p>
+        <div class="hero-cta">
+          <a href="dashboard.html"><button class="btn btn-primary">I’m a Teen</button></a>
+          <button class="btn btn-outline">I’m a Company</button>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric">
+            <strong>45,000+</strong>
+            <span>Teenlancers</span>
+          </div>
+          <div class="metric">
+            <strong>5,000+</strong>
+            <span>Brands posting work</span>
+          </div>
+          <div class="metric">
+            <strong>₹500–₹5,000</strong>
+            <span>Per project</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <span class="floating-tag">Teen Dashboard · Live</span>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Projects matching your skills</span>
+        </div>
+        <p class="balance-label">Wallet balance</p>
+        <p class="balance-amount">₹2,430.50</p>
+        <div class="progress-bar">
+          <span></span>
+        </div>
+        <div class="task-row">
+          <div>
+            <strong>Social media reel</strong>
+            <p class="feature-text">Create 3 reels for a D2C brand</p>
+          </div>
+          <div style="text-align:right;">
+            <span class="badge">₹900 • 2 days</span>
+          </div>
+        </div>
+        <div class="task-row">
+          <div>
+            <strong>Canva poster design</strong>
+            <p class="feature-text">Poster for coaching class event</p>
+          </div>
+          <span class="badge">₹450 • 24 hrs</span>
+        </div>
+        <div class="task-row">
+          <div>
+            <strong>Feedback survey</strong>
+            <p class="feature-text">Review a new learning app</p>
+          </div>
+          <span class="badge">₹150 • 15 mins</span>
+        </div>
+
+        <div class="blur-circle"></div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <p class="section-heading">Designed for teenagers</p>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3 class="feature-title">Skill‑based projects</h3>
+          <p class="feature-text">
+            Pick work in content, design, social media, research, or coding so you never feel like you’re doing random tasks.
+          </p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">🪙</div>
+          <h3 class="feature-title">Simple payouts</h3>
+          <p class="feature-text">
+            Track your approved work and payouts in a clean teen‑friendly wallet interface. Withdraw to UPI or bank.
+          </p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3 class="feature-title">Portfolio first</h3>
+          <p class="feature-text">
+            Every completed project becomes a portfolio item that you can show to colleges, internships, and future clients.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© 2026 Funngro Teenlancer (Demo UI)</span>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
